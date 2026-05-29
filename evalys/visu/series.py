@@ -122,7 +122,7 @@ class UtilizationSeriesVisualization(SeriesVisualization):
 
 
 def plot_series(jobset, *, name, title='Time series plot', legend_label, **kwargs):
-    """
+    r"""
     Helper function to create a series visualization of a workload.
 
     :param jobset: The jobset under study.

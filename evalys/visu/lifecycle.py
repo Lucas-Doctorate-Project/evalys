@@ -198,7 +198,7 @@ class LifecycleVisualization(core.Visualization):
 
 
 def plot_lifecycle(jobset, *, title='Jobs\' life cycle', **kwargs):
-    """
+    r"""
     Helper function to create a lifecycle visualization of a workload.
 
     :param jobset: The jobset under study.

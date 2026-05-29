@@ -62,7 +62,7 @@ class EvalysLayout:
         self.fig.show()
 
     def inject(self, visu_cls, spskey, *args, **kwargs):
-        """
+        r"""
         Create a visualization, and bind it to the layout.
 
         :param visu_cls:

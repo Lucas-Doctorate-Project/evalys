@@ -38,7 +38,7 @@ class DetailsLayout(core.EvalysLayout):
 
 
 def plot_details(jobset, *, title='Workload overview', **kwargs):
-    """
+    r"""
     Helper function to create a detailed overview of a workload.
 
     :param jobset: The jobset under study.

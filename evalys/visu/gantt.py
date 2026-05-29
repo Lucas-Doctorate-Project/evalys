@@ -200,7 +200,7 @@ class DiffGanttVisualization(GanttVisualization):
 
 
 def plot_gantt(jobset, *, title='Gantt chart', **kwargs):
-    """
+    r"""
     Helper function to create a Gantt chart of a workload.
 
     :param jobset: The jobset under study.
@@ -221,7 +221,7 @@ def plot_gantt(jobset, *, title='Gantt chart', **kwargs):
 
 
 def plot_diff_gantt(jobsets, *, title='Gantt charts comparison', **kwargs):
-    """
+    r"""
     Helper function to create a comparison of Gantt charts of two (or more)
     workloads.
 
