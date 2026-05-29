@@ -124,9 +124,24 @@ class JobSet(object):
                'stretch',
                'allocated_resources']
 
+    # legacy Batsim column names -> internal names
+    __legacy_columns = {
+        'allocated_processors': 'allocated_resources',
+        'requested_number_of_processors': 'requested_number_of_resources',
+    }
+
     @classmethod
     def from_csv(cls, filename, resource_bounds=None):
         df = pd.read_csv(filename, converters=cls.__converters)
+        # Normalize legacy Batsim column names to the internal names.
+        df.rename(columns=cls.__legacy_columns, inplace=True)
+        # The ProcSet converter is keyed on 'allocated_resources', so legacy
+        # files (named 'allocated_processors') skipped it: parse them now.
+        alloc = df.get('allocated_resources')
+        if alloc is not None and len(df) \
+                and not isinstance(alloc.iloc[0], ProcSet):
+            df['allocated_resources'] = \
+                alloc.apply(lambda x: ProcSet.from_str(str(x)))
         return cls(df, resource_bounds=resource_bounds)
 
     def to_csv(self, filename):

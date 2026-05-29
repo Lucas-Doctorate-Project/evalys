@@ -209,7 +209,7 @@ class Workload(object):
                        'command', 'queue', 'name', 'array', 'type', 'reservation', 'cigri_id']
             
         df_tmp = pd.read_csv(filename, comment=';', names=columns,
-                         header=0, delim_whitespace=True)
+                         header=0, sep=r'\s+')
 
         if file_extension == 'owf':
             # 
@@ -243,7 +243,7 @@ class Workload(object):
         for line in header_file:
             if re.match("^;", line):
                 header += line
-                m = re.search("^;\s(.*):\s(.*)", line)
+                m = re.search(r"^;\s(.*):\s(.*)", line)
                 if m:
                     metadata[m.group(1).strip()] = m.group(2).strip()
             else:
@@ -477,10 +477,10 @@ class Workload(object):
 
         grouped = df.groupby('day')
         df1 = grouped['jobID'].agg(
-            {'jobs': lambda x: float(x.count())/self.MaxJobs})
+            jobs=lambda x: float(x.count())/self.MaxJobs)
         nb_procs = df['proc_req'].sum()
         df2 = grouped['proc_req'].agg(
-            {'procs': lambda x: float(x.sum())/nb_procs})
+            procs=lambda x: float(x.sum())/nb_procs)
 
         df1['procs'] = df2['procs']
         df1.index = days
@@ -500,10 +500,10 @@ class Workload(object):
 
         grouped = df.groupby('hour')
         df1 = grouped['jobID'].agg(
-            {'jobs': lambda x: float(x.count())/self.MaxJobs})
+            jobs=lambda x: float(x.count())/self.MaxJobs)
         nb_procs = df['proc_req'].sum()
         df2 = grouped['proc_req'].agg(
-            {'procs': lambda x: float(x.sum())/nb_procs})
+            procs=lambda x: float(x.sum())/nb_procs)
 
         df1['procs'] = df2['procs']
         self._arriving_each_hour = df1
@@ -512,8 +512,8 @@ class Workload(object):
     @property
     def jobs_per_week_per_user(self, nb=6):
         # Do not re-compute everytime
-        if self._jobs_per_week_per_user is not None:
-            return self._jobs_per_week_per_user
+        if self._jobs_per_week_per_users is not None:
+            return self._jobs_per_week_per_users
 
         df = self.df
         df['week'] = df.apply(lambda x: datetime.datetime.fromtimestamp(
@@ -521,7 +521,7 @@ class Workload(object):
             axis=1)
         grouped = df.groupby(['week', 'uid'])
 
-        da = grouped['jobID'].agg({'count': 'count'})
+        da = grouped['jobID'].agg(count='count')
         nb_weeks = len(da.index.levels[0])
 
         # identify nb largest contributors (uid), 0 uid is for others)
@@ -554,5 +554,5 @@ class Workload(object):
 
         grouped = self.df.groupby('proc_alloc')
         self._fraction_jobs_by_job_size = grouped['jobID'].agg(
-            {'jobs': lambda x: float(x.count())/len(self.df)})
+            jobs=lambda x: float(x.count())/len(self.df))
         return self._fraction_jobs_by_job_size

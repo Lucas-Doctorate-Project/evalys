@@ -93,13 +93,13 @@ def _load_insert_element_if_necessary(load_df, at):
         new_el = prev_el.copy()
         next_el = load_df[load_df.time >= at].head(1)
         new_el.time = at
-        new_el.area = float(new_el.load) * float(next_el.time - at)
+        new_el.area = new_el.load.iloc[0] * (next_el.time.iloc[0] - at)
         load_df.loc[prev_el.index, "area"] = \
-            float(prev_el.load) * float(at - prev_el.time)
+            prev_el.load.iloc[0] * (at - prev_el.time.iloc[0])
         load_df.loc[len(load_df)] = [
-            float(new_el.time),
-            float(new_el.load),
-            float(new_el.area)]
+            float(new_el.time.iloc[0]),
+            float(new_el.load.iloc[0]),
+            float(new_el.area.iloc[0])]
         load_df = load_df.sort_values(by=["time"])
     return load_df
 
@@ -136,23 +136,23 @@ def fragmentation(free_resources_gaps, p=2):
     This metrics definition comes from Gher and Shneider CCGRID 2009.
     """
     f = free_resources_gaps
-    frag = pd.Series()
+    frag = pd.Series(dtype=float)
     for i, fi in enumerate(f):
         if fi.size == 0:
             frag_i = 0
         else:
             frag_i = 1 - (sum(fi**p) / sum(fi)**p)
-        frag.set_value(i, frag_i)
+        frag.at[i] = frag_i
     return frag
 
 
 def fragmentation_reis(free_resources_gaps, time, p=2):
     f = free_resources_gaps
-    frag = pd.Series()
+    frag = pd.Series(dtype=float)
     for i, fi in enumerate(f):
         if fi.size == 0:
             frag_i = 0
         else:
             frag_i = 1 - (sqrt(sum(fi**p)) / time * len(f))
-        frag.set_value(i, frag_i)
+        frag.at[i] = frag_i
     return frag
