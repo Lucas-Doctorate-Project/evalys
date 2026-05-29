@@ -26,9 +26,13 @@ class DetailsLayout(core.EvalysLayout):
             self.sps[visu] = gs[idx, :]
 
     def show(self):
-        # hacky way to enforce sharing of axes
+        # enforce sharing of the x-axis across all stripes by merging every
+        # axis into a single shared-x group.  matplotlib 3.6 made
+        # get_shared_x_axes() return a read-only view and Axes.sharex refuses
+        # axes that already share an axis (e.g. the lifecycle sub-axes), so we
+        # join the underlying Grouper directly.
         axes = self.fig.get_axes()
-        axes[0].get_shared_x_axes().join(*axes)
+        axes[0]._shared_axes['x'].join(*axes)
 
         super().show()
 

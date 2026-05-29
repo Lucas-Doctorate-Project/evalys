@@ -57,10 +57,13 @@ class SeriesVisualization(core.Visualization):
         self.title = title
         self.xscale = None
 
-    def build(self, jobset, legend_label):
+    def build(self, jobset, legend_label=None):
         # TODO: remove dependency to legacy code
         # XXX: palette is not injected properly
         # XXX: we are missing the normalize parameter
+        # default to the visualization title (e.g. from plot_details)
+        if legend_label is None:
+            legend_label = self.title
         legacy.plot_load(
             load=getattr(jobset, self._metric),
             nb_resources=jobset.MaxProcs,

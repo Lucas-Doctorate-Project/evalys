@@ -123,7 +123,7 @@ class LifecycleVisualization(core.Visualization):
                 matplotlib.dates.DateFormatter('%Y-%m-%d\n%H:%M:%S')
             )
         if self.yscale == 'log2':
-            self._ax['submit'].set_yscale('log', basey=2)
+            self._ax['submit'].set_yscale('log', base=2)
 
         # set caption in the top-most stripe
         captions = [
