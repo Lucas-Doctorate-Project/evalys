@@ -1,8 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals, print_function
 import pandas as pd
-from intsetwrap import string_to_interval_set, interval_set_to_set, \
-                          set_to_interval_set, interval_set_to_string
+
 
 class MachineStatesChanges(object):
     def __init__(self, filename, time_min=None, time_max=None):

@@ -181,7 +181,7 @@ def plot_pstates(pstates, x_horizon, ax=None, palette=None,
             label = labels[col_id]
 
             interval_list = pstates.intervals[job['interval_id']]
-            for machine_interval in interval_list:
+            for machine_interval in interval_list.intervals():
                 (y0, y1) = machine_interval
                 (b, e) = (job['begin'], min(job['end'], x_horizon))
                 rect = mpatch.Rectangle((b, y0), e - b, y1 - y0 + 0.9,

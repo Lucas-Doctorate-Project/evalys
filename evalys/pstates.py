@@ -2,8 +2,7 @@
 from __future__ import unicode_literals, print_function
 import pandas as pd
 import re
-from intsetwrap import string_to_interval_set, interval_set_to_set, \
-                          set_to_interval_set, interval_set_to_string
+from procset import ProcSet
 
 class PowerStatesChanges(object):
     def __init__(self, filename):
@@ -30,8 +29,8 @@ class PowerStatesChanges(object):
             # Pandas/Python/Anything else may use 0.0 instead of 0...
             res_str = r.sub(r"\1", res_str)
 
-            res_intervals = string_to_interval_set(res_str)
-            res_set = interval_set_to_set(res_intervals)
+            res_intervals = ProcSet.from_str(res_str)
+            res_set = set(res_intervals)
 
             for res in res_set:
                 if res in current_pstate:
@@ -40,7 +39,7 @@ class PowerStatesChanges(object):
 
         # Let's add a finish row
         all_machines = set([res for res in current_pstate])
-        all_machines_str = interval_set_to_string(set_to_interval_set(all_machines))
+        all_machines_str = str(ProcSet(*all_machines))
 
         finish_df = pd.DataFrame(index=[0], columns=['time', 'machine_id', 'new_pstate'])
         finish_df.iloc[0] = [float('inf'), all_machines_str, 42]
@@ -59,8 +58,8 @@ class PowerStatesChanges(object):
             # Pandas/Python/Anything else may use 0.0 instead of 0...
             res_str = r.sub(r"\1", res_str)
 
-            res_intervals = string_to_interval_set(res_str)
-            res_set = interval_set_to_set(res_intervals)
+            res_intervals = ProcSet.from_str(res_str)
+            res_set = set(res_intervals)
 
             # All resources of this row had their pstate changed
             # Let's group them by previous pstate and by time to create 'jobs'
@@ -77,7 +76,7 @@ class PowerStatesChanges(object):
             for (previous_pstate, previous_time) in previous_pstates:
                 res_set = previous_pstates[(previous_pstate, previous_time)]
                 res_str = ' '.join(str(x) for x in res_set)
-                res_intervals = string_to_interval_set(res_str)
+                res_intervals = ProcSet.from_str(res_str)
 
                 job = [previous_time, time, previous_pstate, res_intervals]
                 jobs.append(job)
