@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "evalys"
+description = "Infrastructure Performance Evaluation Toolkit"
+readme = "README.rst"
+requires-python = ">=3.11"
+license = { text = "BSD" }
+authors = [
+    { name = "Olivier Richard", email = "olivier.richard@imag.fr" },
+]
+keywords = ["evalys"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Clustering",
+]
+dependencies = [
+    "pandas>=0.19",
+    "matplotlib>=3.6.0,<4",
+    "seaborn>=0.7",
+    "procset>=1.0",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "flake8", "sphinx"]
+
+[project.scripts]
+evalys = "evalys.evalys:main"
+
+[project.urls]
+Homepage = "https://github.com/oar-team/evalys"
+
+[tool.setuptools.dynamic]
+version = { attr = "evalys.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["evalys*"]
+
+[tool.pytest.ini_options]
+addopts = "--tb native -v -r fxX --maxfail=25"
+python_files = ["tests/*test_*.py"]
